@@ -1,11 +1,20 @@
 package CodeGeneration;
 
+import CodeGeneration.CodeGenerationLogic.IntegrationModelCodeGenerationLogic;
+import CodeGeneration.CodeGenerationLogic.OrganizationModelCodeGenerationLogic;
 import CodeGeneration.DataObject.StructureDataObject.EnvironmentModelInfo;
 import CodeGeneration.DataObject.StructureDataObject.IntegrationModelInfo;
 import CodeGeneration.DataObject.StructureDataObject.OrganizationModelInfo;
 import CodeGeneration.Parser.PreprocessParser;
 import CodeGeneration.Parser.StructureParser;
 
+import com.squareup.javapoet.*;
+import kr.ac.kaist.se.model.strc.Organization;
+import kr.ac.kaist.se.model.strc.SoS;
+
+import javax.lang.model.element.Modifier;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class StructureCodeGenerator {
@@ -42,17 +51,58 @@ public class StructureCodeGenerator {
             }
         }
 
-        //IntegrationModelInfo integrationModelInfo = structureParser.getIntegrationModelInfo(url);
-        //ArrayList <OrganizationModelInfo> organizationModelInfos = structureParser.getOrganizationModelInfo(url);
-        //ArrayList <EnvironmentModelInfo> environmentModelInfos = structureParser.getEnvironmentalModelInfo(url);
-
-        StructureCodeGeneration(integrationModelInfo, organizationModelInfoList, environmentModelInfoList);
-
-        
+        IntegrationModelCodeGeneration(integrationModelInfo);
+        OrganizationModelCodeGeneration(organizationModelInfoList);
+        EnvironmentModelCodeGeneration(environmentModelInfoList);
+        //StructureCodeGeneration(integrationModelInfo, organizationModelInfoList, environmentModelInfoList);
 
     }
 
-    private static void StructureCodeGeneration(IntegrationModelInfo integrationModelInfo, ArrayList<OrganizationModelInfo> organizationModelInfos, ArrayList<EnvironmentModelInfo> environmentModelInfos) {
+    private static void IntegrationModelCodeGeneration(IntegrationModelInfo integrationModelInfo) {
+        IntegrationModelCodeGenerationLogic integrationModelCodeGenerationLogic = new IntegrationModelCodeGenerationLogic();
+
+        TypeSpec.Builder builder = TypeSpec.classBuilder(integrationModelInfo.getSoSName());
+
+        MethodSpec constructor = integrationModelCodeGenerationLogic.getConstructor(integrationModelInfo);
+
+        builder.superclass(SoS.class);
+        builder.addModifiers(Modifier.PUBLIC);
+        builder.addMethod(constructor);
+        builder.build();
+
+
+        JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode", builder.build()).
+                build();
+        try {
+            javaFile.writeTo(Paths.get("./src/main/java"));
+        } catch (IOException e) {
+            System.out.println(e.getLocalizedMessage());
+        }
+    }
+
+    private static void OrganizationModelCodeGeneration(ArrayList <OrganizationModelInfo> organizationModelInfoList) {
+        OrganizationModelCodeGenerationLogic organizationModelCodeGenerationLogic = new OrganizationModelCodeGenerationLogic();
+
+        for (OrganizationModelInfo organizationModelInfo : organizationModelInfoList) {
+            TypeSpec.Builder builder = TypeSpec.classBuilder(organizationModelInfo.getOrgName());
+
+            MethodSpec constructor = organizationModelCodeGenerationLogic.getConstructor(organizationModelInfo);
+
+            builder.superclass(Organization.class);
+            builder.addModifiers(Modifier.PUBLIC);
+            builder.addMethod(constructor);
+            builder.build();
+
+            JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode", builder.build()).
+                    build();
+            try {
+                javaFile.writeTo(Paths.get("./src/main/java"));
+            } catch (IOException e) {
+                System.out.println(e.getLocalizedMessage());
+            }
+        }
+    }
+    private static void EnvironmentModelCodeGeneration(ArrayList <EnvironmentModelInfo> environmentModelInfoList) {
 
     }
 

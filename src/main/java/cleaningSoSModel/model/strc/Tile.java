@@ -14,6 +14,7 @@ public class Tile extends PassiveEnvElement {
         super(name, environment);
         this.levelOfDust = 10;
         this.location = new CleaningSoSObjectLocation(x, y, floor);
+
     }
 
     public void addLevelOfDust(int num){

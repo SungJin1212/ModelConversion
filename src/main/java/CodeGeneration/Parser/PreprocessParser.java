@@ -15,6 +15,9 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ Decompose Whole XML to separate XML files
+ */
 public class PreprocessParser { // transform whole xml file -> sub models
     public ArrayList<String> getXMLData(String url) {
 

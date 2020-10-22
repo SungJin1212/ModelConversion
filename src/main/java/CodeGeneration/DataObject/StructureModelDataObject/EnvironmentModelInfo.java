@@ -1,11 +1,11 @@
-package CodeGeneration.DataObject.StructureDataObject;
+package CodeGeneration.DataObject.StructureModelDataObject;
 
 import java.util.ArrayList;
 
 public class EnvironmentModelInfo {
     private String EnvName;
     private String StateMachineName;
-    ArrayList<String> EnvElementNames;
+    private ArrayList<String> EnvElementNames;
 
     public ArrayList<String> getEnvElementNames() {
         return EnvElementNames;

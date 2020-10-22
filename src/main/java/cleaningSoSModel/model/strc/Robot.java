@@ -14,9 +14,11 @@ import java.util.ArrayList;
 
 public abstract class Robot extends CS {
 
+
     public Robot(SoS sos, Organization organization, int x, int y, Floor floor){
         super(sos, organization);
         this.location = new CleaningSoSObjectLocation(x, y, floor);
+
         this.addAction(new MovingUp(this));
         this.addAction(new MovingDown(this));
         this.addAction(new MovingLeft(this));

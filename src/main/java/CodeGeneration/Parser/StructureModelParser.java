@@ -1,8 +1,9 @@
 package CodeGeneration.Parser;
 
-import CodeGeneration.DataObject.StructureDataObject.EnvironmentModelInfo;
-import CodeGeneration.DataObject.StructureDataObject.IntegrationModelInfo;
-import CodeGeneration.DataObject.StructureDataObject.OrganizationModelInfo;
+import CodeGeneration.DataObject.StructureModelDataObject.EnvironmentModelInfo;
+import CodeGeneration.DataObject.StructureModelDataObject.InfrastructureModelInfo;
+import CodeGeneration.DataObject.StructureModelDataObject.IntegrationModelInfo;
+import CodeGeneration.DataObject.StructureModelDataObject.OrganizationModelInfo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -11,7 +12,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.util.ArrayList;
 
-public class StructureParser {
+public class StructureModelParser {
 
     public IntegrationModelInfo getIntegrationModelInfo(String url) {
         IntegrationModelInfo integrationModelInfo = new IntegrationModelInfo();
@@ -182,16 +183,7 @@ public class StructureParser {
                         }
                     }
                 }
-                else if(className.equals("ModelRefStateMachine")) {
-                    NodeList childNodeList = e.getElementsByTagName("ATTRIBUTE");
-                    for(int j=0; j < childNodeList.getLength(); j++) {
-                        Element childE = (Element)childNodeList.item(j);
-                        if (childE.getAttributes().getNamedItem("name").getNodeValue().equals("ref_targetName")) {
-                            environmentModelInfo.setStateMachineName(childE.getTextContent());
-                            break;
-                        }
-                    }
-                }
+
                 else if(className.equals("ObjRefEnvElmt")) {
                     NodeList childNodeList = e.getElementsByTagName("ATTRIBUTE");
                     ArrayList<String> EnvNames = new ArrayList<>(0);
@@ -211,6 +203,13 @@ public class StructureParser {
         }
 
         return environmentModelInfo;
+
+    }
+
+    public InfrastructureModelInfo getInfrastructureModelInfo(String modelName) {
+        InfrastructureModelInfo infrastructureModelInfo = new InfrastructureModelInfo();
+
+        return infrastructureModelInfo;
 
     }
 }

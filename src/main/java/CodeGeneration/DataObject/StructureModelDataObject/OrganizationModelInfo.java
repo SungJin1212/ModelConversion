@@ -1,12 +1,12 @@
-package CodeGeneration.DataObject.StructureDataObject;
+package CodeGeneration.DataObject.StructureModelDataObject;
 
 import java.util.ArrayList;
 
 public class OrganizationModelInfo {
     private String OrgName;
     private String SoSName;
-    ArrayList<String> SubOrgNames;
-    ArrayList<String> CSNames;
+    private ArrayList<String> SubOrgNames;
+    private ArrayList<String> CSNames;
 
     public String getSoSName() {
         return SoSName;

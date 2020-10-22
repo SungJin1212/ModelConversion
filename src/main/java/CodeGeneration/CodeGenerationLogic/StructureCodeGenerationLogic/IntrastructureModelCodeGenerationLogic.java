@@ -1,0 +1,4 @@
+package CodeGeneration.CodeGenerationLogic.StructureCodeGenerationLogic;
+
+public class IntrastructureModelCodeGenerationLogic {
+}

@@ -1,6 +1,6 @@
-package CodeGeneration.CodeGenerationLogic;
+package CodeGeneration.CodeGenerationLogic.StructureCodeGenerationLogic;
 
-import CodeGeneration.DataObject.StructureDataObject.OrganizationModelInfo;
+import CodeGeneration.DataObject.StructureModelDataObject.OrganizationModelInfo;
 import com.squareup.javapoet.CodeBlock;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeVariableName;

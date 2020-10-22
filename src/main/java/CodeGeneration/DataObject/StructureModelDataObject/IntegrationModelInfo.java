@@ -1,15 +1,15 @@
-package CodeGeneration.DataObject.StructureDataObject;
+package CodeGeneration.DataObject.StructureModelDataObject;
 
 import java.util.ArrayList;
 
 public class IntegrationModelInfo {
     private String SoSName;
     private String StateMachineName;
-    ArrayList <String> OrgNames;
-    ArrayList <String> InfraName;
-    ArrayList <String> EnvNames;
-    ArrayList <String> CSs;
-    ArrayList <String> MapNames;
+    private ArrayList <String> OrgNames;
+    private ArrayList <String> InfraName;
+    private ArrayList <String> EnvNames;
+    private ArrayList <String> CSs;
+    private ArrayList <String> MapNames;
 
 
     public ArrayList<String> getCSs() {

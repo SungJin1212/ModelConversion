@@ -3,6 +3,7 @@ package cleaningSoSModel.model.strc;
 import cleaningSoSModel.model.behv.InflowDust;
 import kr.ac.kaist.se.model.strc.ActiveEnvElement;
 import kr.ac.kaist.se.model.strc.Environment;
+import kr.ac.kaist.se.model.strc.Infrastructure;
 import kr.ac.kaist.se.model.strc.PassiveEnvElement;
 import kr.ac.kaist.se.simdata.output.intermediate.RunResult;
 

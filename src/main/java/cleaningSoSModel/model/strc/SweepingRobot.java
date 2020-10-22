@@ -15,6 +15,7 @@ import java.util.Random;
 
 public class SweepingRobot extends Robot {
 
+
     public SweepingRobot(SoS sos, Organization organization, int x, int y, Floor floor, String name) {
         super(sos, organization, x, y, floor);
         this.name = name;

@@ -2,12 +2,13 @@ package kr.ac.kaist.se.model.strc;
 
 import kr.ac.kaist.se.intf.DecisionMakeable;
 import kr.ac.kaist.se.model.abst.cap._SimAction_;
+import kr.ac.kaist.se.model.abst.sys._SimActionableObject_;
 import kr.ac.kaist.se.simdata.output.intermediate.RunResult;
 import kr.ac.kaist.se.simdata.output.intermediate.UpdateResult;
 
 import java.util.ArrayList;
 
-abstract public class CS extends SystemEntity implements DecisionMakeable {
+abstract public class CS extends _SimActionableObject_ implements DecisionMakeable {
     protected SoS sos;
     protected Organization organization;
 

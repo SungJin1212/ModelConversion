@@ -7,6 +7,7 @@ public class CleaningSoSObjectLocation extends ObjectLocation {
     private int y;
     private Floor floor;
 
+
     public CleaningSoSObjectLocation(int x, int y, Floor f){
         this.x = x;
         this.y = y;

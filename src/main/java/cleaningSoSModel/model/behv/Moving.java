@@ -35,7 +35,6 @@ public abstract class Moving extends Action {
     public boolean checkPrecondition(){
         CleaningSoSMap cleaningSoSMap = (CleaningSoSMap) this.target.getSos().getMap();
         CleaningSoSObjectLocation curLoc = (CleaningSoSObjectLocation) target.getLocation();
-
         CleaningSoSObjectLocation newLoc = new CleaningSoSObjectLocation(curLoc.getX() + xDiff, curLoc.getY() + yDiff, curLoc.getFloor());
 
         if (cleaningSoSMap.isValidLocation(newLoc)){

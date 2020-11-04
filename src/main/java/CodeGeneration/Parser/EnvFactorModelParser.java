@@ -1,9 +1,5 @@
 package CodeGeneration.Parser;
 
-/**
- * Parser for SystemEntity and CS Model
- */
-
 import CodeGeneration.DataObject.SystemModelDataObject.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -15,13 +11,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-
-public class SystemEntityModelParser {
+public class EnvFactorModelParser {
     public SMModelInfo getSMModelInfo(String url) {
         SMModelInfo smModelInfo = new SMModelInfo();
         ArrayList<State> states = new ArrayList<>(0);
         ArrayList<Transition> transitions = new ArrayList<>(0);
-        HashMap <String, String> stateIDList = new HashMap<>(0);
+        HashMap<String, String> stateIDList = new HashMap<>(0);
 
         try {
 
@@ -87,7 +82,6 @@ public class SystemEntityModelParser {
                         if (childE.getAttributes().getNamedItem("name").getNodeValue().equals("state_transition_guard")) {
                             if (childE.getTextContent().equals("")) {
                                 t.setGuard("true");
-
                             }
                             else {
                                 t.setGuard(childE.getTextContent());
@@ -128,8 +122,8 @@ public class SystemEntityModelParser {
         return smModelInfo;
     }
 
-    public SystemEntityModelInfo getCSModelInfo(String url) {
-        SystemEntityModelInfo systemEntityModelInfo = new SystemEntityModelInfo();
+    public EnvElmtModelInfo getEnvElmtModelInfo(String url) {
+        EnvElmtModelInfo envElmtModelInfo = new EnvElmtModelInfo();
         ArrayList <ActionInfo> actionInfoList = new ArrayList<>(0);
         ArrayList<LocationInfo> locationInfoList = new ArrayList<>(0);
 
@@ -153,10 +147,9 @@ public class SystemEntityModelParser {
                     Element childE = (Element) childNodeList.item(j);
                     if(childE.getAttributes().getNamedItem("tmodeltype").getNodeValue().equals("State Machine Model")) {
                         String referenceName = childE.getAttributes().getNamedItem("tmodelname").getNodeValue();
-                        systemEntityModelInfo.setStateMachineReferenceName(referenceName);
+                        envElmtModelInfo.setStateMachineReferenceName(referenceName);
                         break;
                     }
-
                 }
             }
 
@@ -164,16 +157,30 @@ public class SystemEntityModelParser {
                 Element e = (Element) instanceNodes.item(i);
                 String className = e.getAttributes().getNamedItem("class").getNodeValue();
 
-                if (className.equals("SystemEntity")) {
+                if (className.equals("ActiveEnvElement")) {
                     NodeList childNodeList = e.getElementsByTagName("ATTRIBUTE");
                     for(int j=0; j < childNodeList.getLength(); j++) {
                         Element childE = (Element)childNodeList.item(j);
                         if (childE.getAttributes().getNamedItem("name").getNodeValue().equals("obj_name")) {
-                            systemEntityModelInfo.setSystemEntityName(childE.getTextContent());
+                            envElmtModelInfo.setEnvElmtName(childE.getTextContent());
+                            envElmtModelInfo.setType("Active");
                             break;
                         }
                     }
                 }
+
+                else if (className.equals("PassiveEnvElement")) {
+                    NodeList childNodeList = e.getElementsByTagName("ATTRIBUTE");
+                    for(int j=0; j < childNodeList.getLength(); j++) {
+                        Element childE = (Element)childNodeList.item(j);
+                        if (childE.getAttributes().getNamedItem("name").getNodeValue().equals("obj_name")) {
+                            envElmtModelInfo.setEnvElmtName(childE.getTextContent());
+                            envElmtModelInfo.setType("Passive");
+                            break;
+                        }
+                    }
+                }
+
                 else if (className.equals("Action")) {
                     NodeList childNodeList = e.getElementsByTagName("ATTRIBUTE");
                     ActionInfo actionInfo = new ActionInfo();
@@ -203,12 +210,13 @@ public class SystemEntityModelParser {
                     }
                     actionInfoList.add(actionInfo);
                 }
+
                 else if (className.equals("ModelRefStateMachine")) {
                     NodeList childNodeList = e.getElementsByTagName("ATTRIBUTE");
                     for(int j=0; j < childNodeList.getLength(); j++) {
                         Element childE = (Element)childNodeList.item(j);
                         if (childE.getAttributes().getNamedItem("name").getNodeValue().equals("ref_targetName")) {
-                            systemEntityModelInfo.setStateMachineName(childE.getTextContent());
+                            envElmtModelInfo.setStateMachineName(childE.getTextContent());
                             break;
                         }
                     }
@@ -236,16 +244,18 @@ public class SystemEntityModelParser {
                         }
                     }
                 }
+
             }
-            systemEntityModelInfo.setLocationInfoList(locationInfoList);
-            systemEntityModelInfo.setActionInfoList(actionInfoList);
-            systemEntityModelInfo.setSmModelInfo(getSMModelInfo(systemEntityModelInfo.getStateMachineReferenceName() + ".xml")); // set StateMachine Info
+
+            envElmtModelInfo.setLocationInfoList(locationInfoList);
+            envElmtModelInfo.setActionInfoList(actionInfoList);
+            envElmtModelInfo.setSmModelInfo(getSMModelInfo(envElmtModelInfo.getStateMachineReferenceName() + ".xml")); // set StateMachine Info
+
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-
-        return systemEntityModelInfo;
+        return envElmtModelInfo;
     }
 }

@@ -40,15 +40,23 @@ abstract public class SoS extends _SimObject_ {
         this.orgList = new ArrayList<Organization>(0);
         this.csList = new ArrayList<CS>(0);
         this.envList = new ArrayList<Environment>(0);
+        this.infraList = new ArrayList<>(0);
+        this.systemEntityList = new ArrayList<>(0);
+        this.serviceEntityList = new ArrayList<>(0);
     }
 
     public RunResult run(){
         RunResult runResult = new RunResult(this, new ArrayList<_SimAction_>(0));
+        for(Environment environment: this.envList) {
+            runResult.addChildRunResult(environment.run());
+        }
+
         for(Organization organization: this.orgList) {
             runResult.addChildRunResult(organization.run());
         }
-        for(Environment environment: this.envList) {
-            runResult.addChildRunResult(environment.run());
+
+        for(Infrastructure infrastructure: this.infraList) {
+            runResult.addChildRunResult(infrastructure.run());
         }
         return runResult;
     }
@@ -66,9 +74,41 @@ abstract public class SoS extends _SimObject_ {
                 UpdateResult updateResult1 = target.update(childRunResult);
                 updateResult.addAllLog(updateResult1.getLog());
             }
+            if (childRunResult.getTarget() instanceof  Infrastructure) {
+                Infrastructure target = (Infrastructure) childRunResult.getTarget();
+                UpdateResult updateResult1 = target.update(childRunResult);
+                updateResult.addAllLog(updateResult1.getLog());
+            }
         }
         return updateResult;
     }
+    public void addInfra(Infrastructure infrastructure) {infraList.add(infrastructure);}
+    public void removeInfra(Infrastructure infrastructure) {infraList.remove(infrastructure);}
+
+    public void addSystemEntity(SystemEntity systemEntity) {systemEntityList.add(systemEntity);}
+    public void removeSystemEntity(SystemEntity systemEntity) {systemEntityList.remove(systemEntity);}
+
+    public void addServiceEntity(ServiceEntity serviceEntity) {serviceEntityList.add(serviceEntity);}
+    public void removeServiceEntity(ServiceEntity serviceEntity) {serviceEntityList.remove(serviceEntity);}
+
+    public ServiceEntity searchServiceEntity(String name) {
+        for (ServiceEntity serviceEntity : this.serviceEntityList) {
+            if(serviceEntity.getName().equals(name)) {
+                return serviceEntity;
+            }
+        }
+        return null;
+    }
+
+    public SystemEntity searchSystemEntity(String name) {
+        for (SystemEntity systemEntity : this.systemEntityList) {
+            if(systemEntity.getName().equals(name)) {
+                return systemEntity;
+            }
+        }
+        return null;
+    }
+
 
     public void addOrg(Organization organization) {
         orgList.add(organization);
@@ -139,6 +179,12 @@ abstract public class SoS extends _SimObject_ {
         for(Environment environment: this.envList){
             for(PassiveEnvElement passiveEnvElement: environment.passiveEnvElmtList){
                 this.map.addObjectLocationArrayListHashMap(passiveEnvElement.getLocation(), passiveEnvElement);
+            }
+        }
+
+        for (Infrastructure infrastructure : this.infraList) {
+            for(SystemEntity systemEntity : infrastructure.systemEntityList) {
+                this.map.addObjectLocationArrayListHashMap(systemEntity.getLocation(), systemEntity);
             }
         }
     }

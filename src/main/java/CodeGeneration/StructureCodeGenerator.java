@@ -1,6 +1,7 @@
 package CodeGeneration;
 
 import CodeGeneration.CodeGenerationLogic.StructureCodeGenerationLogic.EnvironmentModelCodeGenerationLogic;
+import CodeGeneration.CodeGenerationLogic.StructureCodeGenerationLogic.InfrastructureModelCodeGenerationLogic;
 import CodeGeneration.CodeGenerationLogic.StructureCodeGenerationLogic.IntegrationModelCodeGenerationLogic;
 import CodeGeneration.CodeGenerationLogic.StructureCodeGenerationLogic.OrganizationModelCodeGenerationLogic;
 import CodeGeneration.DataObject.StructureModelDataObject.EnvironmentModelInfo;
@@ -11,6 +12,7 @@ import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 import kr.ac.kaist.se.model.strc.Environment;
+import kr.ac.kaist.se.model.strc.Infrastructure;
 import kr.ac.kaist.se.model.strc.Organization;
 import kr.ac.kaist.se.model.strc.SoS;
 
@@ -94,7 +96,27 @@ class StructureCodeGenerator {
     }
 
     void InfrastructureModelCodeGeneration(ArrayList <InfrastructureModelInfo> infrastructureModelInfoList) {
+        InfrastructureModelCodeGenerationLogic infrastructureModelCodeGenerationLogic = new InfrastructureModelCodeGenerationLogic();
 
+        for(InfrastructureModelInfo infrastructureModelInfo : infrastructureModelInfoList) {
+            TypeSpec.Builder builder = TypeSpec.classBuilder(infrastructureModelInfo.getInfraName());
+
+            MethodSpec constructor = infrastructureModelCodeGenerationLogic.getConstructor(infrastructureModelInfo);
+
+            builder.superclass(Infrastructure.class);
+            builder.addModifiers(Modifier.PUBLIC);
+            builder.addMethod(constructor);
+            builder.build();
+
+            JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode.model.structure", builder.build()).
+                    build();
+
+            try {
+                javaFile.writeTo(Paths.get("./src/main/java"));
+            } catch (IOException e) {
+                System.out.println(e.getLocalizedMessage());
+            }
+        }
     }
 
 

@@ -1,9 +1,6 @@
-package CodeGeneration.CodeGenerationLogic.SystemCodeGenerationLogic;
+package CodeGeneration.CodeGenerationLogic;
 
-import CodeGeneration.DataObject.SystemModelDataObject.SMModelInfo;
-import CodeGeneration.DataObject.SystemModelDataObject.State;
-import CodeGeneration.DataObject.SystemModelDataObject.SystemEntityModelInfo;
-import CodeGeneration.DataObject.SystemModelDataObject.Transition;
+import CodeGeneration.DataObject.SystemModelDataObject.*;
 import com.squareup.javapoet.*;
 import com.sun.org.apache.bcel.internal.generic.PUSH;
 
@@ -56,6 +53,27 @@ public class SMModelCodeGenerationLogic {
         return builder.build();
     }
 
+    public MethodSpec getSelectActionsCode(EnvElmtModelInfo envElmtModelInfo) {
+
+        MethodSpec.Builder decisionMakingCode = MethodSpec.methodBuilder("selectActions").addModifiers(Modifier.PUBLIC).returns(TypeName.VOID)
+                .addAnnotation(Override.class);
+
+        CodeBlock.Builder decisionMakingBody = CodeBlock.builder();
+
+        decisionMakingBody.addStatement("Status aStatus = status");
+        decisionMakingBody.beginControlFlow("switch(aStatus)");
+
+        for(State state : envElmtModelInfo.getSmModelInfo().getStates()) {
+            decisionMakingBody.add(getStateTransitionCode(state,envElmtModelInfo.getEnvElmtName()));
+        }
+        decisionMakingBody.endControlFlow();
+
+        decisionMakingCode.addCode(decisionMakingBody.build());
+
+        return decisionMakingCode.build();
+    }
+
+
     public MethodSpec getDecisionMakingCode(SystemEntityModelInfo systemEntityModelInfo) {
 
         MethodSpec.Builder decisionMakingCode = MethodSpec.methodBuilder("doDecisionMaking").addModifiers(Modifier.PUBLIC).returns(TypeName.VOID)
@@ -74,7 +92,6 @@ public class SMModelCodeGenerationLogic {
         decisionMakingCode.addCode(decisionMakingBody.build());
 
         return decisionMakingCode.build();
-
     }
 
     private CodeBlock getStateTransitionCode(State state, String systemEntityName) {
@@ -92,28 +109,30 @@ public class SMModelCodeGenerationLogic {
             stateTransitionCode.addStatement("if ($N) $NTo$N = $N", transition.getGuard(), transition.getFrom(), transition.getTo(), transition.getProbability());
         }
 
-        stateTransitionCode.addStatement("int pro[] = $N", probabilityList);
+        stateTransitionCode.addStatement("int probabilityList[] = $N", probabilityList);
 
-        stateTransitionCode.beginControlFlow("for(int i=0; i < pro.length; i++)");
-        stateTransitionCode.addStatement("pro[i] += pro[i-1]");
+        stateTransitionCode.beginControlFlow("for(int i=$L; i < probabilityList.length; i++)", "1");
+        stateTransitionCode.addStatement("probabilityList[i] += probabilityList[i-1]");
         stateTransitionCode.endControlFlow();
 
-        stateTransitionCode.addStatement("int randomProVal = (int)($T.random() * pro[pro.length-1])", Math.class);
+        stateTransitionCode.addStatement("int randomProVal = (int)($T.random() * probabilityList[probabilityList.length-1])", Math.class);
 
         int index = 0;
         for(Transition transition : state.getTransitionList()) {
             if(index == 0) {
-                stateTransitionCode.beginControlFlow("if ($N <= randomProVal && $N > randomProVal)", "0", String.format("pro[%d]", index));
+                stateTransitionCode.beginControlFlow("if ($N <= randomProVal && $N > randomProVal)", "0", String.format("probabilityList[%d]", index));
                 for(String action : transition.getActions()) {
                     stateTransitionCode.addStatement("selectedActionList.add(new $T())", ClassName.get(packageName, systemEntityName + "_" + action));
+                    stateTransitionCode.addStatement("setStatus(Status.$N)",transition.getTo());
                 }
                 stateTransitionCode.endControlFlow();
             }
             else {
 
-                stateTransitionCode.beginControlFlow("if ($N <= randomProVal && $N > randomProVal)", String.format("pro[%d]", index), String.format("pro[%d]", (index +1)));
+                stateTransitionCode.beginControlFlow("else if ($N <= randomProVal && $N > randomProVal)", String.format("probabilityList[%d]", index), String.format("probabilityList[%d]", (index +1)));
                 for(String action : transition.getActions()) {
                     stateTransitionCode.addStatement("selectedActionList.add(new $T())", ClassName.get(packageName, systemEntityName + "_" + action));
+                    stateTransitionCode.addStatement("setStatus(Status.$N)",transition.getTo());
                 }
                 stateTransitionCode.endControlFlow();
             }
@@ -121,6 +140,7 @@ public class SMModelCodeGenerationLogic {
         }
 
         stateTransitionCode.endControlFlow();
+        stateTransitionCode.addStatement("break");
         stateTransitionCode.endControlFlow();
 
         return stateTransitionCode.build();

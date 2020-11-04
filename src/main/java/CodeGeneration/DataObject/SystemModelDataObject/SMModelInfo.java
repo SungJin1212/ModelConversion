@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 public class SMModelInfo {
 
-
-
     private ArrayList<State> states;
     private ArrayList<Transition> transitions;
 

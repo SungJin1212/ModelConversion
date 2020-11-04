@@ -96,6 +96,8 @@ public class StructureModelParser {
 
     public OrganizationModelInfo getOrganizationModelInfo(String url) {
         OrganizationModelInfo organizationModelInfo = new OrganizationModelInfo();
+        ArrayList<String> OrgNameList = new ArrayList<>(0);
+        ArrayList<String> CSNames = new ArrayList<>(0);
 
         try {
 
@@ -125,18 +127,15 @@ public class StructureModelParser {
                 }
                 else if(className.equals("ModelRefOrg")) {
                     NodeList childNodeList = e.getElementsByTagName("ATTRIBUTE");
-                    ArrayList<String> OrgNameList = new ArrayList<>(0);
                     for(int j=0; j < childNodeList.getLength(); j++) {
                         Element childE = (Element)childNodeList.item(j);
                         if (childE.getAttributes().getNamedItem("name").getNodeValue().equals("ref_targetName")) {
                             OrgNameList.add(childE.getTextContent());
                         }
                     }
-                    organizationModelInfo.setSubOrgNames(OrgNameList);
                 }
                 else if(className.equals("ModelRefSystem")) {
                     NodeList childNodeList = e.getElementsByTagName("ATTRIBUTE");
-                    ArrayList<String> CSNames = new ArrayList<>(0);
 
                     for(int j=0; j < childNodeList.getLength(); j++) {
                         Element childE = (Element)childNodeList.item(j);
@@ -144,9 +143,11 @@ public class StructureModelParser {
                             CSNames.add(childE.getTextContent());
                         }
                     }
-                    organizationModelInfo.setCSNames(CSNames);
                 }
             }
+            organizationModelInfo.setSubOrgNames(OrgNameList);
+            organizationModelInfo.setCSNames(CSNames);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -206,8 +207,66 @@ public class StructureModelParser {
 
     }
 
-    public InfrastructureModelInfo getInfrastructureModelInfo(String modelName) {
+    public InfrastructureModelInfo getInfrastructureModelInfo(String url) {
         InfrastructureModelInfo infrastructureModelInfo = new InfrastructureModelInfo();
+        ArrayList<String> SystemEntityNames = new ArrayList<>(0);
+        ArrayList<String> ServiceEntityNames = new ArrayList<>(0);
+
+        try {
+
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+
+            Document document = builder.parse(url);
+
+            Element rootElement = document.getDocumentElement();
+            NodeList instanceNodes = rootElement.getElementsByTagName("INSTANCE"); //object data from xml file
+            NodeList relationNodes = rootElement.getElementsByTagName("CONNECTOR"); //relation data from xml file
+
+            for (int i = 0; i < instanceNodes.getLength(); i++) {
+                Element e = (Element) instanceNodes.item(i);
+
+                String className = e.getAttributes().getNamedItem("class").getNodeValue();
+
+                if (className.equals("Infrastructure")) {
+                    NodeList childNodeList = e.getElementsByTagName("ATTRIBUTE");
+                    for(int j=0; j < childNodeList.getLength(); j++) {
+                        Element childE = (Element)childNodeList.item(j);
+                        if (childE.getAttributes().getNamedItem("name").getNodeValue().equals("obj_name")) {
+                            infrastructureModelInfo.setInfraName(childE.getTextContent());
+                            break;
+                        }
+                    }
+                }
+                else if (className.equals("ModelRefSystem")) {
+                    NodeList childNodeList = e.getElementsByTagName("ATTRIBUTE");
+                    for(int j=0; j < childNodeList.getLength(); j++) {
+                        Element childE = (Element)childNodeList.item(j);
+                        if (childE.getAttributes().getNamedItem("name").getNodeValue().equals("ref_targetName")) {
+                            SystemEntityNames.add(childE.getTextContent());
+                            break;
+                        }
+                    }
+                }
+                else if (className.equals("ModelRefService")) {
+                    NodeList childNodeList = e.getElementsByTagName("ATTRIBUTE");
+                    for(int j=0; j < childNodeList.getLength(); j++) {
+                        Element childE = (Element)childNodeList.item(j);
+                        if (childE.getAttributes().getNamedItem("name").getNodeValue().equals("ref_targetName")) {
+                            ServiceEntityNames.add(childE.getTextContent());
+                            break;
+                        }
+                    }
+                }
+            }
+
+            infrastructureModelInfo.setSystemEntityNames(SystemEntityNames);
+            infrastructureModelInfo.setServiceEntityNames(ServiceEntityNames);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         return infrastructureModelInfo;
 

@@ -6,15 +6,16 @@ import CodeGeneration.DataObject.SystemModelDataObject.LocationInfo;
 import CodeGeneration.DataObject.SystemModelDataObject.State;
 import CodeGeneration.DataObject.SystemModelDataObject.SystemEntityModelInfo;
 import com.squareup.javapoet.*;
-import kr.ac.kaist.se.model.strc.Infrastructure;
+import kr.ac.kaist.se.model.strc.Organization;
 import kr.ac.kaist.se.model.strc.SoS;
 import kr.ac.kaist.se.simdata.output.intermediate.RunResult;
 import kr.ac.kaist.se.simdata.output.intermediate.UpdateResult;
 
 import javax.lang.model.element.Modifier;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class SystemEntityModelCodeGenerationLogic {
+public class CSModelCodeGenerationLogic {
     public MethodSpec getConstructor(MapModelInfo mapModelInfo, SystemEntityModelInfo systemEntityModelInfo) {
 
         String packageName = "CodeGeneration.GeneratedCode.model.geo";
@@ -30,10 +31,10 @@ public class SystemEntityModelCodeGenerationLogic {
         }
 
         MethodSpec.Builder builder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-                .addParameter(SoS.class, "sos").addParameter(Infrastructure.class, "infrastructure")
+                .addParameter(SoS.class, "sos").addParameter(Organization.class, "organization")
                 .addParameter(String.class, "name"); // TODO: Add Location Info
 
-        builder.addStatement("super(sos,infrastructure)");
+        builder.addStatement("super(sos,organization)");
         String objectLocationInitStr = "";
 
         for(LocationInfo locationInfo : systemEntityModelInfo.getLocationInfoList()) {

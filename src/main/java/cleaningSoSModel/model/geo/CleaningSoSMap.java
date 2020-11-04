@@ -5,6 +5,8 @@ import kr.ac.kaist.se.model.geo.Map;
 import kr.ac.kaist.se.model.geo.ObjectLocation;
 
 public class CleaningSoSMap extends Map {
+
+
     private int minX = 0;
     private int maxX = 2;
     private int minY = 0;

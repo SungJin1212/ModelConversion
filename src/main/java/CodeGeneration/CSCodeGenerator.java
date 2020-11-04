@@ -1,14 +1,15 @@
 package CodeGeneration;
 
 import CodeGeneration.CodeGenerationLogic.ActionCodeGenerationLogic;
-import CodeGeneration.CodeGenerationLogic.SystemCodeGenerationLogic.SMModelCodeGenerationLogic;
-import CodeGeneration.CodeGenerationLogic.SystemCodeGenerationLogic.SystemEntityModelCodeGenerationLogic;
-import CodeGeneration.DataObject.SystemModelDataObject.ActionInfo;
+import CodeGeneration.CodeGenerationLogic.SMModelCodeGenerationLogic;
+import CodeGeneration.CodeGenerationLogic.SystemCodeGenerationLogic.CSModelCodeGenerationLogic;
+import CodeGeneration.DataObject.GeoModelDataObject.LocDimensionVar;
+import CodeGeneration.DataObject.GeoModelDataObject.MapModelInfo;
+import CodeGeneration.DataObject.SystemModelDataObject.LocationInfo;
 import CodeGeneration.DataObject.SystemModelDataObject.SMModelInfo;
 import CodeGeneration.DataObject.SystemModelDataObject.SystemEntityModelInfo;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.TypeSpec;
-import kr.ac.kaist.se.model.behv.Action;
 import kr.ac.kaist.se.model.strc.CS;
 
 
@@ -16,15 +17,30 @@ import javax.lang.model.element.Modifier;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  SystemEntityCode, SMModelCode, ActionCode corresponding to the SystemEntityCode
  */
 
-class SystemCodeGenerator {
-    void CSModelCodeGeneration(ArrayList<SystemEntityModelInfo> systemEntityModelInfoList) {
-        SystemEntityModelCodeGenerationLogic systemEntityModelCodeGenerationLogic = new SystemEntityModelCodeGenerationLogic();
+class CSCodeGenerator {
+
+    public void CSModelCodeGeneration(MapModelInfo mapModelInfo, ArrayList<SystemEntityModelInfo> systemEntityModelInfoList) {
+        CSModelCodeGenerationLogic CSModelCodeGenerationLogic = new CSModelCodeGenerationLogic();
         SMModelCodeGenerationLogic smModelCodeGenerationLogic = new SMModelCodeGenerationLogic();
+        ActionCodeGenerationLogic actionCodeGenerationLogic = new ActionCodeGenerationLogic();
+
+        HashMap<String, String> NameToType = new HashMap<>(0);
+
+        for(LocDimensionVar locDimensionVar : mapModelInfo.getLocDimensionVarList()) {
+            NameToType.put(locDimensionVar.getVarName().trim(), locDimensionVar.getVarType().trim());
+            //System.out.println(locDimensionVar.getVarName() + "   " + locDimensionVar.getVarType());
+        }
+        for (SystemEntityModelInfo systemEntityModelInfo : systemEntityModelInfoList) {
+            for (LocationInfo locationInfo : systemEntityModelInfo.getLocationInfoList()) {
+                locationInfo.setType(NameToType.get(locationInfo.getValName()));
+            }
+        }
 
         for (SystemEntityModelInfo systemEntityModelInfo : systemEntityModelInfoList) {
             TypeSpec.Builder builder = TypeSpec.classBuilder(systemEntityModelInfo.getSystemEntityName());
@@ -37,8 +53,9 @@ class SystemCodeGenerator {
             builder.addType(smModelCodeGenerationLogic.getEnumCode(systemEntityModelInfo.getSmModelInfo())); // enum (state info)
             builder.addMethod(smModelCodeGenerationLogic.getDecisionMakingCode(systemEntityModelInfo)); // DecisionMaking code
 
-            builder.addMethods(systemEntityModelCodeGenerationLogic.getMethods(systemEntityModelInfo)); // changeState, selectActions, update
-            builder.addMethod(systemEntityModelCodeGenerationLogic.getConstructor(systemEntityModelInfo));
+            builder.addFields(CSModelCodeGenerationLogic.getSystemEntityModelFieldsCode(systemEntityModelInfo, mapModelInfo));
+            builder.addMethods(CSModelCodeGenerationLogic.getMethods(systemEntityModelInfo)); // changeState, selectActions, update
+            builder.addMethod(CSModelCodeGenerationLogic.getConstructor(mapModelInfo, systemEntityModelInfo));
 
 
 
@@ -53,40 +70,15 @@ class SystemCodeGenerator {
 
 
             //SMModelCodeGeneration(systemEntityModelInfo.getSmModelInfo(), systemEntityModelInfo.getStateMachineName()); // Call SM Model Generation
-            ActionClassCodeGeneration(systemEntityModelInfo.getActionInfoList(), systemEntityModelInfo.getSystemEntityName());
+            actionCodeGenerationLogic.ActionClassCodeGeneration(systemEntityModelInfo.getActionInfoList(), systemEntityModelInfo.getSystemEntityName(), 1);
 
         }
     }
 
-    private void ActionClassCodeGeneration(ArrayList<ActionInfo> actionInfoList, String SystemName) {
 
-
-        ActionCodeGenerationLogic actionCodeGenerationLogic = new ActionCodeGenerationLogic();
-
-        for(ActionInfo actionInfo : actionInfoList) {
-            TypeSpec.Builder builder = TypeSpec.classBuilder(SystemName + "_" + actionInfo.getName());
-
-            builder.addModifiers(Modifier.PUBLIC);
-            builder.superclass(Action.class);
-            builder.addFields(actionCodeGenerationLogic.getActionFieldsCode(actionInfo, SystemName));
-            builder.addMethod(actionCodeGenerationLogic.getUtilityCode(actionInfo));
-            builder.addMethod(actionCodeGenerationLogic.getExecuteCode(actionInfo));
-            builder.addMethod(actionCodeGenerationLogic.getCheckPreconditionCode(actionInfo));
-
-
-            JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode.model.Behavior", builder.build()).
-                    build();
-            try {
-                javaFile.writeTo(Paths.get("./src/main/java"));
-            } catch (IOException e) {
-                System.out.println(e.getLocalizedMessage());
-            }
-        }
-
-    }
 
     void SMModelCodeGeneration(SMModelInfo smModelInfo, String SMName) {
-        SystemEntityModelCodeGenerationLogic systemEntityModelCodeGenerationLogic = new SystemEntityModelCodeGenerationLogic();
+        CSModelCodeGenerationLogic CSModelCodeGenerationLogic = new CSModelCodeGenerationLogic();
 
         TypeSpec.Builder builder = TypeSpec.classBuilder(SMName);
 

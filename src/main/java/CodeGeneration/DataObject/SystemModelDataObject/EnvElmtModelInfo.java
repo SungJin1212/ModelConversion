@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 public class EnvElmtModelInfo {
     private String EnvElmtName;
-    private String Type;
-    private String StateMachineName;
-    private ArrayList<String> actions;
+    private String Type; //"Active" or "Passive"
+    private String StateMachineName; // SM_OutDoorDust
+    private String StateMachineReferenceName; // EnvFactor01_SM
+    private ArrayList<ActionInfo> actionInfoList;
+    private ArrayList<LocationInfo> locationInfoList;
+    private SMModelInfo smModelInfo;
 
     public String getEnvElmtName() {
         return EnvElmtName;
@@ -32,11 +35,35 @@ public class EnvElmtModelInfo {
         StateMachineName = stateMachineName;
     }
 
-    public ArrayList<String> getActions() {
-        return actions;
+    public String getStateMachineReferenceName() {
+        return StateMachineReferenceName;
     }
 
-    public void setActions(ArrayList<String> actions) {
-        this.actions = actions;
+    public void setStateMachineReferenceName(String stateMachineReferenceName) {
+        StateMachineReferenceName = stateMachineReferenceName;
+    }
+
+    public ArrayList<ActionInfo> getActionInfoList() {
+        return actionInfoList;
+    }
+
+    public void setActionInfoList(ArrayList<ActionInfo> actionInfoList) {
+        this.actionInfoList = actionInfoList;
+    }
+
+    public ArrayList<LocationInfo> getLocationInfoList() {
+        return locationInfoList;
+    }
+
+    public void setLocationInfoList(ArrayList<LocationInfo> locationInfoList) {
+        this.locationInfoList = locationInfoList;
+    }
+
+    public SMModelInfo getSmModelInfo() {
+        return smModelInfo;
+    }
+
+    public void setSmModelInfo(SMModelInfo smModelInfo) {
+        this.smModelInfo = smModelInfo;
     }
 }

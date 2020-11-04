@@ -5,10 +5,19 @@ import java.util.ArrayList;
 public class SystemEntityModelInfo {
 
     private String SystemEntityName;
-    private String StateMachineName;
-    private String StateMachineReferenceName;
+    private String StateMachineName; //SM_****
+    private String StateMachineReferenceName; //System**_SM
     private ArrayList<ActionInfo> actionInfoList;
+    private ArrayList<LocationInfo> locationInfoList;
     private SMModelInfo smModelInfo;
+
+    public ArrayList<LocationInfo> getLocationInfoList() {
+        return locationInfoList;
+    }
+
+    public void setLocationInfoList(ArrayList<LocationInfo> locationInfoList) {
+        this.locationInfoList = locationInfoList;
+    }
 
     public String getStateMachineReferenceName() {
         return StateMachineReferenceName;

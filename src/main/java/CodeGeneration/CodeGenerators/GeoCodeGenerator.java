@@ -1,4 +1,4 @@
-package CodeGeneration;
+package CodeGeneration.CodeGenerators;
 
 import CodeGeneration.CodeGenerationLogic.GeoCodeGenerationLogic.LocationInformationCodeGenerationLogic;
 import CodeGeneration.CodeGenerationLogic.GeoCodeGenerationLogic.MapCodeGenerationLogic;
@@ -27,10 +27,10 @@ public class GeoCodeGenerator {
         builder.addMethods(locationInformationCodeGenerationLogic.getConstructorCode(mapModelInfo));
         builder.addMethods(locationInformationCodeGenerationLogic.getGettersCodeAndSettersCode(mapModelInfo));
 
-        JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode.model.geo", builder.build()).
+        JavaFile javaFile = JavaFile.builder("GeneratedCode.geo", builder.build()).
                 build();
         try {
-            javaFile.writeTo(Paths.get("./src/main/java"));
+            javaFile.writeTo(Paths.get("./src/Main/java"));
         } catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
         }
@@ -48,10 +48,10 @@ public class GeoCodeGenerator {
                     builder.addEnumConstant(enumVar);
                 }
 
-                JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode.model.geo", builder.build()).
+                JavaFile javaFile = JavaFile.builder("GeneratedCode.geo", builder.build()).
                         build();
                 try {
-                    javaFile.writeTo(Paths.get("./src/main/java"));
+                    javaFile.writeTo(Paths.get("./src/Main/java"));
                 } catch (IOException e) {
                     System.out.println(e.getLocalizedMessage());
                 }
@@ -69,10 +69,10 @@ public class GeoCodeGenerator {
         builder.addMethod(mapCodeGenerationLogic.getLocationInfoCode(mapModelInfo));
         builder.addMethod(mapCodeGenerationLogic.getInitCode(mapModelInfo));
 
-        JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode.model.geo", builder.build()).
+        JavaFile javaFile = JavaFile.builder("GeneratedCode.geo", builder.build()).
                 build();
         try {
-            javaFile.writeTo(Paths.get("./src/main/java"));
+            javaFile.writeTo(Paths.get("./src/Main/java"));
         } catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
         }
@@ -90,10 +90,10 @@ public class GeoCodeGenerator {
         builder.addMethods(objectLocationCodeGenerationLogic.getGettersAndSettersCode(mapModelInfo));
         builder.addMethod(objectLocationCodeGenerationLogic.getIsSameLocationCode(mapModelInfo));
 
-        JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode.model.geo", builder.build()).
+        JavaFile javaFile = JavaFile.builder("GeneratedCode.geo", builder.build()).
                 build();
         try {
-            javaFile.writeTo(Paths.get("./src/main/java"));
+            javaFile.writeTo(Paths.get("./src/Main/java"));
         } catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
         }

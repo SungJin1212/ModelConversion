@@ -1,6 +1,7 @@
 package kr.ac.kaist.se.model.strc;
 
 import kr.ac.kaist.se.model.abst.cap._SimAction_;
+import kr.ac.kaist.se.model.abst.comm._SimMessage_;
 import kr.ac.kaist.se.model.abst.sys._SimObject_;
 import kr.ac.kaist.se.model.behv.Role;
 import kr.ac.kaist.se.model.behv.Task;
@@ -33,11 +34,25 @@ abstract public class Organization extends _SimObject_ {
     }
 
     public RunResult run(){
+
+        ArrayList<Message> broadcastMsgs = new ArrayList<>();
+        while (msgQueue.size() != 0) {
+            broadcastMsgs.add((Message)msgQueue.poll());
+        }
+
         RunResult runResult = new RunResult(this, new ArrayList<_SimAction_>(0));
         for(Organization organization: this.subOrgList) {
+            //Broadcast a message
+            for (Message msg : broadcastMsgs){
+                organization.getMsgQueue().offer(msg);
+            }
             runResult.addChildRunResult(organization.run());
         }
         for(CS cs: this.directCSList) {
+            //Broadcast a message
+            for (Message msg : broadcastMsgs){
+                cs.getMsgQueue().offer(msg);
+            }
             runResult.addChildRunResult(cs.run());
         }
         return runResult;
@@ -60,6 +75,7 @@ abstract public class Organization extends _SimObject_ {
         }
         return updateResult;
     }
+
 
     public SoS getSoS() {
         return soS;

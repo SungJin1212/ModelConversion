@@ -8,6 +8,7 @@ import CodeGeneration.DataObject.SystemModelDataObject.LocationInfo;
 import CodeGeneration.DataObject.SystemModelDataObject.State;
 import com.squareup.javapoet.*;
 import kr.ac.kaist.se.model.strc.Environment;
+import kr.ac.kaist.se.model.strc.SoS;
 import kr.ac.kaist.se.simdata.output.intermediate.RunResult;
 import kr.ac.kaist.se.simdata.output.intermediate.UpdateResult;
 
@@ -28,15 +29,17 @@ public class EnvElmtModelCodeGenerationLogic {
         }
 
         MethodSpec.Builder builder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-                .addParameter(String.class, "name")
-                .addParameter(Environment.class, "environment");
+                .addParameter(SoS.class, "sos")
+                .addParameter(Environment.class, "environment")
+                .addParameter(String.class, "name");
                  // TODO: Add Location Info
 
 
-        builder.addStatement("super(name, environment)");
+        builder.addStatement("super(sos, environment)");
+        builder.addStatement("this.name=name");
 
         if (envElmtModelInfo.getLocationInfoList().size() >= 1) { // if locationInfo is exist
-            String packageName = "CodeGeneration.GeneratedCode.model.geo";
+            String packageName = "GeneratedCode.geo";
             String objectLocationName = mapModelInfo.getMapName() + "ObjectLocation";
             ClassName objectLocationClassName = ClassName.get(packageName ,objectLocationName);
 
@@ -115,7 +118,7 @@ public class EnvElmtModelCodeGenerationLogic {
 
     public ArrayList<FieldSpec> getSystemEntityModelFieldsCode(EnvElmtModelInfo envElmtModelInfo, MapModelInfo mapModelInfo) {
 
-        String packageName = "CodeGeneration.GeneratedCode.model.geo";
+        String packageName = "GeneratedCode.geo";
 
         ArrayList<FieldSpec> ElmtModelFieldsCode = new ArrayList<>(0);
 

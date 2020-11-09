@@ -95,7 +95,7 @@ public class SMModelCodeGenerationLogic {
     }
 
     private CodeBlock getStateTransitionCode(State state, String systemEntityName) {
-        String packageName = "CodeGeneration.GeneratedCode.model.Behavior"; // TODO: Configure Path
+        String packageName = "GeneratedCode.Behavior"; // TODO: Configure Path
 
         String timeValue = state.getStateName() + "Time";
         String probabilityList = getProbabilityList(state);

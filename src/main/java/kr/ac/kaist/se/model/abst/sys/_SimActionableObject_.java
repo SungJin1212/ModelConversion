@@ -3,6 +3,8 @@ package kr.ac.kaist.se.model.abst.sys;
 import kr.ac.kaist.se.intf.Actionable;
 import kr.ac.kaist.se.model.abst.cap._SimAction_;
 import kr.ac.kaist.se.model.behv.Action;
+import kr.ac.kaist.se.simdata.output.intermediate.RunResult;
+import kr.ac.kaist.se.simdata.output.intermediate.UpdateResult;
 
 import java.util.ArrayList;
 
@@ -40,4 +42,14 @@ abstract public class _SimActionableObject_ extends _SimObject_ implements Actio
     }
 
     abstract protected void selectActions(); //TODO: set return
+
+    public UpdateResult update(RunResult runResult) {
+        UpdateResult updateResult = new UpdateResult(this.name);
+
+        for (_SimAction_ selectedAction: runResult.getSelectedActionList()) {
+            doAction(selectedAction);
+            updateResult.addLog(selectedAction.getName());
+        }
+        return updateResult;
+    }
 }

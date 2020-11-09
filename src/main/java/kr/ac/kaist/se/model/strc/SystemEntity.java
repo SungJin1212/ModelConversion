@@ -4,11 +4,13 @@ import kr.ac.kaist.se.intf.Communicatable;
 import kr.ac.kaist.se.intf.DecisionMakeable;
 import kr.ac.kaist.se.intf.Stateful;
 import kr.ac.kaist.se.model.abst.cap._SimAction_;
+import kr.ac.kaist.se.model.abst.data._SimData_;
 import kr.ac.kaist.se.model.abst.sys._SimActionableObject_;
 import kr.ac.kaist.se.simdata.output.intermediate.RunResult;
 import kr.ac.kaist.se.simdata.output.intermediate.UpdateResult;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 abstract public class SystemEntity extends _SimActionableObject_
         implements Communicatable, DecisionMakeable {
@@ -43,21 +45,30 @@ abstract public class SystemEntity extends _SimActionableObject_
         infrastructure.addSystemEntity(this);
     }
 
+    @Override
+    public void readIncomingMsgs() {
+        //read msg
+        //update knowledge base
+        //in case of CS, msgDataList is automatically stored into its knowledge base
+
+    }
+
+
     public RunResult run() {
         this.clearSelectedAction();
         this.doDecisionMaking();
         return new RunResult(this, this.selectedActionList);
     }
 
-    public UpdateResult update(RunResult runResult) {
-        UpdateResult updateResult = new UpdateResult(this.name);
-
-        for (_SimAction_ selectedAction: runResult.getSelectedActionList()) {
-            doAction(selectedAction);
-            updateResult.addLog(selectedAction.getName());
-        }
-        return updateResult;
-    }
+//    public UpdateResult update(RunResult runResult) {
+//        UpdateResult updateResult = new UpdateResult(this.name);
+//
+//        for (_SimAction_ selectedAction: runResult.getSelectedActionList()) {
+//            doAction(selectedAction);
+//            updateResult.addLog(selectedAction.getName());
+//        }
+//        return updateResult;
+//    }
 
     public void doAction(_SimAction_ action){
         action.executeAction();

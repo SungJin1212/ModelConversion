@@ -33,7 +33,7 @@ public class LocationInformationCodeGenerationLogic {
 
         ArrayList<MethodSpec> constructors = new ArrayList<>(0);
 
-        String packageName = "CodeGeneration.CodeGenerationLogic.GeneratedCode.geo";
+        String packageName = "CodeGenerationLogic.geo";
         MethodSpec.Builder constructorCode = MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC).addParameter(ParameterizedTypeName.get(ArrayList.class, _SimObject_.class), "objectArrayList");
 

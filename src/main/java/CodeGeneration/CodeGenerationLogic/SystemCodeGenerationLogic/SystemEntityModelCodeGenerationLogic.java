@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class SystemEntityModelCodeGenerationLogic {
     public MethodSpec getConstructor(MapModelInfo mapModelInfo, SystemEntityModelInfo systemEntityModelInfo) {
 
-        String packageName = "CodeGeneration.GeneratedCode.model.geo";
+        String packageName = "GeneratedCode.geo";
         String objectLocationName = mapModelInfo.getMapName() + "ObjectLocation";
         ClassName objectLocationClassName = ClassName.get(packageName ,objectLocationName);
         String initialStateName = "Dummy";
@@ -116,7 +116,7 @@ public class SystemEntityModelCodeGenerationLogic {
 
     public ArrayList<FieldSpec> getSystemEntityModelFieldsCode(SystemEntityModelInfo systemEntityModelInfo, MapModelInfo mapModelInfo) {
 
-        String packageName = "CodeGeneration.GeneratedCode.model.geo";
+        String packageName = "GeneratedCode.geo";
 
         ArrayList<FieldSpec> SystemEntityModelFieldsCode = new ArrayList<>(0);
 

@@ -45,19 +45,69 @@ abstract public class SoS extends _SimObject_ {
         this.serviceEntityList = new ArrayList<>(0);
     }
 
+    public _SimObject_ getSimObject(String id) {
+        for(Organization organization : orgList) {
+            if(organization.getId().equals(id)) {
+                return organization;
+            }
+        }
+        for (Infrastructure infrastructure : infraList) {
+            if(infrastructure.getId().equals(id)) {
+                return infrastructure;
+            }
+        }
+        for (Environment environment : envList) {
+            if(environment.getId().equals(id)) {
+                return environment;
+            }
+        }
+        for (CS cs : csList) {
+            if(cs.getId().equals(id)) {
+                return cs;
+            }
+        }
+        for (SystemEntity systemEntity : systemEntityList) {
+            if(systemEntity.getId().equals(id)) {
+                return systemEntity;
+            }
+        }
+        for (ResourceEntity resourceEntity : resourceEntityList) {
+            if(resourceEntity.getId().equals(id)) {
+                return resourceEntity;
+            }
+        }
+        for (ServiceEntity serviceEntity : serviceEntityList) {
+            if(serviceEntity.getId().equals(id)) {
+                return serviceEntity;
+            }
+        }
+        for (ActiveEnvElement activeEnvElement : activeEnvElmtList) {
+            if(activeEnvElement.getId().equals(id)) {
+                return activeEnvElement;
+            }
+        }
+        for (PassiveEnvElement passiveEnvElement : passiveEnvElmtList) {
+            if(passiveEnvElement.getId().equals(id)) {
+                return passiveEnvElement;
+            }
+        }
+        return null;
+    }
+
     public RunResult run(){
         RunResult runResult = new RunResult(this, new ArrayList<_SimAction_>(0));
         for(Environment environment: this.envList) {
             runResult.addChildRunResult(environment.run());
         }
 
+        for(Infrastructure infrastructure: this.infraList) {
+            runResult.addChildRunResult(infrastructure.run());
+        }
+
         for(Organization organization: this.orgList) {
             runResult.addChildRunResult(organization.run());
         }
 
-        for(Infrastructure infrastructure: this.infraList) {
-            runResult.addChildRunResult(infrastructure.run());
-        }
         return runResult;
     }
 
@@ -138,10 +188,15 @@ abstract public class SoS extends _SimObject_ {
     public void addEnvironment(Environment environment) {
         this.envList.add(environment);
     }
-
     public void removeEnvironment(Environment environment) {
         this.envList.remove(environment);
     }
+
+    public void addActiveEnvironment(ActiveEnvElement activeEnvElement) {this.activeEnvElmtList.add(activeEnvElement);}
+    public void removeActiveEnvironment(ActiveEnvElement activeEnvElement) {this.activeEnvElmtList.remove(activeEnvElement);}
+
+    public void addPassiveEnvironment(PassiveEnvElement passiveEnvElement) {this.passiveEnvElmtList.add(passiveEnvElement);}
+    public void removePassiveEnvironment(PassiveEnvElement passiveEnvElement) {this.passiveEnvElmtList.remove(passiveEnvElement);}
 
     public Map getMap() {
         return map;

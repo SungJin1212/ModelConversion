@@ -12,7 +12,7 @@ import javax.lang.model.element.TypeParameterElement;
 
 public class IntegrationModelCodeGenerationLogic {
     public MethodSpec getConstructor(IntegrationModelInfo integrationModelInfo) {
-        String packageName = "cleaningSoSModel.model.geo"; // TODO: Configure Path
+        String packageName = "GeneratedCode.geo"; // TODO: Configure Path
         MethodSpec.Builder builder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
                 .addParameter(TypeVariableName.get("String"), "name");
 

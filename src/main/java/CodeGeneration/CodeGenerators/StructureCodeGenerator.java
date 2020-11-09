@@ -1,4 +1,4 @@
-package CodeGeneration;
+package CodeGeneration.CodeGenerators;
 
 import CodeGeneration.CodeGenerationLogic.StructureCodeGenerationLogic.EnvironmentModelCodeGenerationLogic;
 import CodeGeneration.CodeGenerationLogic.StructureCodeGenerationLogic.InfrastructureModelCodeGenerationLogic;
@@ -36,10 +36,10 @@ class StructureCodeGenerator {
         builder.build();
 
 
-        JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode.model.structure", builder.build()).
+        JavaFile javaFile = JavaFile.builder("GeneratedCode.structure", builder.build()).
                 build();
         try {
-            javaFile.writeTo(Paths.get("./src/main/java"));
+            javaFile.writeTo(Paths.get("./src/Main/java"));
         } catch (IOException e) {
             System.out.println(e.getLocalizedMessage());
         }
@@ -58,10 +58,10 @@ class StructureCodeGenerator {
             builder.addMethod(constructor);
             builder.build();
 
-            JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode.model.structure", builder.build()).
+            JavaFile javaFile = JavaFile.builder("GeneratedCode.structure", builder.build()).
                     build();
             try {
-                javaFile.writeTo(Paths.get("./src/main/java"));
+                javaFile.writeTo(Paths.get("./src/Main/java"));
             } catch (IOException e) {
                 System.out.println(e.getLocalizedMessage());
             }
@@ -84,11 +84,11 @@ class StructureCodeGenerator {
             builder.addMethod(UpdateResult);
             builder.build();
 
-            JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode.model.structure", builder.build()).
+            JavaFile javaFile = JavaFile.builder("GeneratedCode.structure", builder.build()).
                     build();
 
             try {
-                javaFile.writeTo(Paths.get("./src/main/java"));
+                javaFile.writeTo(Paths.get("./src/Main/java"));
             } catch (IOException e) {
                 System.out.println(e.getLocalizedMessage());
             }
@@ -108,11 +108,11 @@ class StructureCodeGenerator {
             builder.addMethod(constructor);
             builder.build();
 
-            JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode.model.structure", builder.build()).
+            JavaFile javaFile = JavaFile.builder("GeneratedCode.structure", builder.build()).
                     build();
 
             try {
-                javaFile.writeTo(Paths.get("./src/main/java"));
+                javaFile.writeTo(Paths.get("./src/Main/java"));
             } catch (IOException e) {
                 System.out.println(e.getLocalizedMessage());
             }

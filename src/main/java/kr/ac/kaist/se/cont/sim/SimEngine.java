@@ -1,5 +1,7 @@
 package kr.ac.kaist.se.cont.sim;
 
+import kr.ac.kaist.se.model.abst.cap._SimAction_;
+import kr.ac.kaist.se.model.behv.CommAction;
 import kr.ac.kaist.se.model.strc.SoS;
 import kr.ac.kaist.se.simdata.input.*;
 import kr.ac.kaist.se.simdata.output.intermediate.RunResult;
@@ -38,6 +40,14 @@ public class SimEngine {
 
             RunResult simulationResult = this.runSimulation();
             simulationResult = this.resolveConflict(simulationResult);
+
+            ArrayList<CommAction> selectedCommActions = readCommActions(new ArrayList<>(0),simulationResult);
+            //Enqueue messages of the selected CommActions
+            for (CommAction commAction : selectedCommActions){ //execute commActions
+                sos.getSimObject(commAction.getMessage().getReceiverId()).getMsgQueue().offer(commAction.getMessage()); //get corresponding simObject from receiverId and get msgQueue and push the message
+            }
+            //simulationResult:= target, selectedActionList, childRunResult
+
             UpdateResult updateResult1 = this.updateSimulation(simulationResult);
             updateResult.addAllLog(updateResult1.getLog());
             simLog.addUpdateResult(updateResult);
@@ -45,6 +55,21 @@ public class SimEngine {
             sos.updateMapObjectLocationArrayListHashMap();
         }
         return simLog;
+    }
+
+    //Extract commAction from selectedActionList while remove commAction from s
+    //TODO: DEBUG
+    private ArrayList<CommAction> readCommActions(ArrayList<CommAction> curCommAction, RunResult aRunResult) {
+        for (_SimAction_ simAction : aRunResult.getSelectedActionList()) {
+            if (simAction instanceof CommAction) {
+                curCommAction.add((CommAction) simAction);
+                aRunResult.getSelectedActionList().remove(simAction);
+            }
+        }
+        for (RunResult runResult: aRunResult.getChildRunResults()) {
+            curCommAction.addAll(readCommActions(curCommAction,runResult));
+        }
+        return curCommAction;
     }
 
     protected ArrayList<SimScenarioEvent> getEvent() {

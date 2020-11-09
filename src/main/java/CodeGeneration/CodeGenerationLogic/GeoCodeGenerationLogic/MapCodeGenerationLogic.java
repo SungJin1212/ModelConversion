@@ -16,7 +16,7 @@ public class MapCodeGenerationLogic {
 
 
     public ArrayList<FieldSpec> getFieldsCode(MapModelInfo mapModelInfo) {
-        String packageName = "CodeGeneration.GeneratedCode.model.geo";
+        String packageName = "GeneratedCode.geo";
         String ObjectLocationName = mapModelInfo.getMapName() + "ObjectLocation";
         String LocationInformationName = mapModelInfo.getMapName() + "LocationInformation";
         String MapInfoName = mapModelInfo.getMapName() + "MapInfo";
@@ -138,7 +138,7 @@ public class MapCodeGenerationLogic {
 
     private CodeBlock getEachQueryCode(String forInfo, String initInfo, MapModelInfo mapModelInfo, HashMap<String, String> locDimensionVarToType) {
 
-        String packageName = "CodeGeneration.GeneratedCode.model.geo";
+        String packageName = "GeneratedCode.geo";
         String ObjectLocationName = mapModelInfo.getMapName() + "ObjectLocation";
         String LocationInformationName = mapModelInfo.getMapName() + "LocationInformation";
         String MapInfoName = mapModelInfo.getMapName() + "MapInfo";

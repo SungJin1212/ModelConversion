@@ -1,4 +1,4 @@
-package CodeGeneration;
+package CodeGeneration.CodeGenerators;
 
 import CodeGeneration.DataObject.GeoModelDataObject.MapModelInfo;
 import CodeGeneration.DataObject.StructureModelDataObject.EnvironmentModelInfo;
@@ -79,6 +79,7 @@ public class CodeGenerator {
         EnvCodeGenerator envCodeGenerator = new EnvCodeGenerator();
         SystemEntityCodeGenerator systemEntityCodeGenerator = new SystemEntityCodeGenerator();
         ServiceEntityCodeGenerator serviceEntityCodeGenerator = new ServiceEntityCodeGenerator();
+        MainCodeGenerator mainCodeGenerator = new MainCodeGenerator();
 
         structureCodeGenerator.IntegrationModelCodeGeneration(integrationModelInfo);
         structureCodeGenerator.OrganizationModelCodeGeneration(organizationModelInfoList);
@@ -91,10 +92,12 @@ public class CodeGenerator {
         geoCodeGenerator.ObjectLocationCodeGeneration(mapModelInfo);
         //geoModelCodeGenerator.MapModelCodeGeneration(mapModelInfoList);
 
-        CSCodeGenerator.CSModelCodeGeneration(mapModelInfo, CSModelInfoList);
-        systemEntityCodeGenerator.SystemEntityCodeGeneration(mapModelInfo, systemEntityModelInfoList);
-        serviceEntityCodeGenerator.ServiceEntityCodeGeneration(mapModelInfo, serviceEntityModelInfoList);
+        CSCodeGenerator.CSModelCodeGeneration(mapModelInfo, CSModelInfoList, integrationModelInfo);
+        systemEntityCodeGenerator.SystemEntityCodeGeneration(mapModelInfo, systemEntityModelInfoList, integrationModelInfo);
+        serviceEntityCodeGenerator.ServiceEntityCodeGeneration(mapModelInfo, serviceEntityModelInfoList, integrationModelInfo);
 
-        envCodeGenerator.EnvModelCodeGeneration(mapModelInfo, envElmtModelInfoList);
+        envCodeGenerator.EnvModelCodeGeneration(mapModelInfo, envElmtModelInfoList, integrationModelInfo);
+        mainCodeGenerator.MainCodeGeneration(integrationModelInfo, infrastructureModelInfoList, organizationModelInfoList,
+                serviceEntityModelInfoList, systemEntityModelInfoList, CSModelInfoList);
     }
 }

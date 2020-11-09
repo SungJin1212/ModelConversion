@@ -1,9 +1,10 @@
-package CodeGeneration;
+package CodeGeneration.CodeGenerators;
 
 import CodeGeneration.CodeGenerationLogic.ActionCodeGenerationLogic;
 import CodeGeneration.CodeGenerationLogic.ServiceEntityCodeGenerationLogic;
 import CodeGeneration.DataObject.GeoModelDataObject.LocDimensionVar;
 import CodeGeneration.DataObject.GeoModelDataObject.MapModelInfo;
+import CodeGeneration.DataObject.StructureModelDataObject.IntegrationModelInfo;
 import CodeGeneration.DataObject.SystemModelDataObject.LocationInfo;
 import CodeGeneration.DataObject.SystemModelDataObject.ServiceEntityModelInfo;
 import CodeGeneration.DataObject.SystemModelDataObject.SystemEntityModelInfo;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ServiceEntityCodeGenerator {
-    public void ServiceEntityCodeGeneration(MapModelInfo mapModelInfo, ArrayList<ServiceEntityModelInfo> serviceEntityModelInfoList) {
+    public void ServiceEntityCodeGeneration(MapModelInfo mapModelInfo, ArrayList<ServiceEntityModelInfo> serviceEntityModelInfoList, IntegrationModelInfo integrationModelInfo) {
         ServiceEntityCodeGenerationLogic serviceEntityCodeGenerationLogic = new ServiceEntityCodeGenerationLogic();
         ActionCodeGenerationLogic actionCodeGenerationLogic = new ActionCodeGenerationLogic();
 
@@ -44,17 +45,17 @@ public class ServiceEntityCodeGenerator {
             builder.addMethod(serviceEntityCodeGenerationLogic.getConstructor(mapModelInfo, serviceEntityModelInfo));
             builder.addMethods(serviceEntityCodeGenerationLogic.getMethods(serviceEntityModelInfo));
 
-            JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode.model.ServiceModel", builder.build()).
+            JavaFile javaFile = JavaFile.builder("GeneratedCode.ServiceModel", builder.build()).
                     build();
             try {
-                javaFile.writeTo(Paths.get("./src/main/java"));
+                javaFile.writeTo(Paths.get("./src/Main/java"));
             } catch (IOException e) {
                 System.out.println(e.getLocalizedMessage());
             }
 
 
             //SMModelCodeGeneration(systemEntityModelInfo.getSmModelInfo(), systemEntityModelInfo.getStateMachineName()); // Call SM Model Generation
-            actionCodeGenerationLogic.ActionClassCodeGeneration(serviceEntityModelInfo.getActionInfoList(), serviceEntityModelInfo.getServiceEntityName(), 2);
+            actionCodeGenerationLogic.ActionClassCodeGeneration(serviceEntityModelInfo.getActionInfoList(), serviceEntityModelInfo.getServiceEntityName(),integrationModelInfo, 2);
 
         }
     }

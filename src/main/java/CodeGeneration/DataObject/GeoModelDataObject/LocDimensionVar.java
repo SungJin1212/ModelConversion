@@ -12,6 +12,26 @@ public class LocDimensionVar {
     private String discreteValue;
     private String defaultVal; // default value
 
+    //TODO: need check
+    private String curValue;
+    private String nextValue;
+
+    public String getCurValue() {
+        return curValue;
+    }
+
+    public void setCurValue(String curValue) {
+        this.curValue = curValue;
+    }
+
+    public String getNextValue() {
+        return nextValue;
+    }
+
+    public void setNextValue(String nextValue) {
+        this.nextValue = nextValue;
+    }
+
     public String getDefaultVal() {
         return defaultVal;
     }
@@ -22,6 +42,9 @@ public class LocDimensionVar {
 
     public String getDiscreteValue() {
         return discreteValue;
+    }
+
+    public LocDimensionVar() {
     }
 
     public LocDimensionVar(String varName, String varType, String varMin, String varMax, String discreteValue, String defaultVal) {

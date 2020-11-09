@@ -1,10 +1,11 @@
-package CodeGeneration;
+package CodeGeneration.CodeGenerators;
 
 import CodeGeneration.CodeGenerationLogic.ActionCodeGenerationLogic;
 import CodeGeneration.CodeGenerationLogic.EnvElmtCodeGenerationLogic.EnvElmtModelCodeGenerationLogic;
 import CodeGeneration.CodeGenerationLogic.SMModelCodeGenerationLogic;
 import CodeGeneration.DataObject.GeoModelDataObject.LocDimensionVar;
 import CodeGeneration.DataObject.GeoModelDataObject.MapModelInfo;
+import CodeGeneration.DataObject.StructureModelDataObject.IntegrationModelInfo;
 import CodeGeneration.DataObject.SystemModelDataObject.EnvElmtModelInfo;
 import CodeGeneration.DataObject.SystemModelDataObject.LocationInfo;
 import com.squareup.javapoet.JavaFile;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class EnvCodeGenerator {
-    public void EnvModelCodeGeneration(MapModelInfo mapModelInfo, ArrayList<EnvElmtModelInfo> envElmtModelInfoList) {
+    public void EnvModelCodeGeneration(MapModelInfo mapModelInfo, ArrayList<EnvElmtModelInfo> envElmtModelInfoList, IntegrationModelInfo integrationModelInfo) {
         EnvElmtModelCodeGenerationLogic envElmtModelCodeGenerationLogic = new EnvElmtModelCodeGenerationLogic();
         SMModelCodeGenerationLogic smModelCodeGenerationLogic = new SMModelCodeGenerationLogic();
         ActionCodeGenerationLogic actionCodeGenerationLogic = new ActionCodeGenerationLogic();
@@ -65,17 +66,17 @@ public class EnvCodeGenerator {
 
 
 
-            JavaFile javaFile = JavaFile.builder("CodeGeneration.GeneratedCode.model.EnvModel", builder.build()).
+            JavaFile javaFile = JavaFile.builder("GeneratedCode.EnvModel", builder.build()).
                     build();
             try {
-                javaFile.writeTo(Paths.get("./src/main/java"));
+                javaFile.writeTo(Paths.get("./src/Main/java"));
             } catch (IOException e) {
                 System.out.println(e.getLocalizedMessage());
             }
 
 
             //SMModelCodeGeneration(systemEntityModelInfo.getSmModelInfo(), systemEntityModelInfo.getStateMachineName()); // Call SM Model Generation
-            actionCodeGenerationLogic.ActionClassCodeGeneration(envElmtModelInfo.getActionInfoList(), envElmtModelInfo.getEnvElmtName(), 0);
+            actionCodeGenerationLogic.ActionClassCodeGeneration(envElmtModelInfo.getActionInfoList(), envElmtModelInfo.getEnvElmtName(), integrationModelInfo, 0);
 
         }
 

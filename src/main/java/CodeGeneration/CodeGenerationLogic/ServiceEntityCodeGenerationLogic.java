@@ -13,7 +13,8 @@ import java.util.ArrayList;
 public class ServiceEntityCodeGenerationLogic {
     public MethodSpec getConstructor(MapModelInfo mapModelInfo, ServiceEntityModelInfo serviceEntityModelInfo) {
         MethodSpec.Builder builder = MethodSpec.constructorBuilder().addModifiers(Modifier.PUBLIC)
-                .addParameter(SoS.class, "sos").addParameter(Infrastructure.class, "infrastructure")
+                .addParameter(SoS.class, "sos")
+                .addParameter(Infrastructure.class, "infrastructure")
                 .addParameter(String.class, "name"); // TODO: Add Location Info
 
         builder.addStatement("super(sos,infrastructure)");

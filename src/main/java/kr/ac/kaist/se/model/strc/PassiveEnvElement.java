@@ -4,12 +4,13 @@ import kr.ac.kaist.se.model.abst.sys._SimNonActionableObject_;
 import kr.ac.kaist.se.simdata.output.intermediate.RunResult;
 import kr.ac.kaist.se.simdata.output.intermediate.UpdateResult;
 
-public class PassiveEnvElement extends _SimNonActionableObject_ {
-    protected Environment environment;
+public abstract class PassiveEnvElement extends EnvElement {
 
-    public PassiveEnvElement(String name, Environment environment){
-        this.name = name;
-        this.environment = environment;
+
+    public PassiveEnvElement(SoS sos, Environment environment){
+        super(sos,environment);
+
+        sos.addPassiveEnvironment(this);
         environment.addPassiveEnvElement(this);
     }
 
@@ -17,7 +18,7 @@ public class PassiveEnvElement extends _SimNonActionableObject_ {
         return new RunResult(this, null);
     }
 
-    public UpdateResult update(RunResult runResult) {
-        return new UpdateResult(this.name);
-    }
+//    public UpdateResult update(RunResult runResult) {
+//        return new UpdateResult(this.name);
+//    }
 }
